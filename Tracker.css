@@ -1,0 +1,140 @@
+body
+{
+    font-family: "Comfortaa", serif;
+}
+.header
+{
+    background: #6a1b9a;
+    color: white;
+    padding-left: 25px;
+    font-size:large;
+}
+.input-form {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 95%;
+    margin: auto;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px #6a1b9a;
+    margin-top: 15px;
+    padding: 25px 0px;
+    gap: 15px; /* This adds space between all flex items */
+}
+
+#add-button
+{
+    background:#6a1b9a ;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: x-large;
+    font-weight: 600;
+    color: white;
+}
+.inputs
+{
+    width: 30%;
+}
+
+.cards
+{
+    display: flex;
+    width: 95%;
+    margin: auto;
+    justify-content: space-between;
+}
+.card
+{
+    background:#6a1b9a;
+    border: 0px;
+    height: 150px;
+    width:18rem;
+}
+.card-body
+{
+    color: white;
+}
+
+
+.transaction-table
+{
+
+    width: 95%;
+    margin: auto;
+    border: 1px black solid;
+    border-radius: 8px;
+    overflow: hidden;
+    font-weight:900;
+    box-shadow: 0px 4px 4px rgba(0,0,0,0.5);
+    padding: 0px;
+}
+
+#header-row
+{
+    background: #6a1b9a;
+  
+}
+
+#header-row th
+{
+    padding: 15px 10px;
+    color: white;
+}
+
+.delete-button,.delete-button:hover
+{
+    background: red;
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+@media only screen and (max-width: 768px) 
+{
+    .header
+    {
+        background:black;
+        
+    }
+    .input-form
+{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap:15px;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
+}
+.inputs
+{
+    width: 75%;
+}
+#add-button
+{
+    background:black ;
+    width: 75%;
+    border-radius: 8px;
+}
+.cards
+{
+    display: flex;
+    flex-wrap: wrap;
+    width: 95%;
+    margin: auto;
+    justify-content: space-between;
+    gap:15px;
+}
+.card
+{
+    background:black;
+    border: 0px;
+    height: 150px;
+    width: 150px;
+
+}
+#header-row
+{
+    background: black;
+  
+}
+}
