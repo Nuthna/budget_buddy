@@ -12,6 +12,35 @@
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./Home.css">
 </head>
+<script>
+    const nameInput = document.getElementById("floatingInput");
+    const nameSpan = document.getElementById("Name");
+    const loginButton = document.getElementById("login-button");
+
+    // Function to set name and update UI
+    function setNameUI(name) {
+        nameSpan.textContent = name + "!";
+        document.querySelector(".form-floating").style.display = "none";
+        loginButton.textContent = "Continue";
+    }
+
+    // Check if name exists in localStorage on page load
+    window.addEventListener("DOMContentLoaded", () => {
+        const storedName = localStorage.getItem("username");
+        if (storedName) {
+            setNameUI(storedName);
+        }
+    });
+
+    // When user clicks login
+    loginButton.addEventListener("click", () => {
+        const inputName = nameInput.value.trim();
+        if (inputName) {
+            localStorage.setItem("username", inputName);
+            setNameUI(inputName);
+        }
+    });
+</script>
 
 <body>
     <div class="parent">
