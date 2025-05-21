@@ -29,21 +29,20 @@
   <div class="parent">
     <div class="solid-circle"></div>
 
-    <div class="header-home d-flex justify-content-between align-items-center p-3">
+    <div class="header-home">
       <h5 class="m-0">Expense Tracker
-        <img src="./spending.png" alt="icon" width="35px" height="35px">
+        <img src="./spending.png" alt="" width="35px" height="35px">
       </h5>
-      <button class="btn btn-md btn-primary" id="click-here-button">Click Here</button>
     </div>
 
-    <div class="main-content p-4">
+    <div class="main-content">
       <h2 class="main-content-text">Hello
-        <img src="./wave.png" alt="wave" width="35px">,
+        <img src="./wave.png" alt="" width="35px">,
         please enter your <br>
         <span id="Name">Name</span>
       </h2>
 
-      <div class="form-floating mb-3 mt-3">
+      <div class="form-floating mb-3">
         <input type="text" class="form-control" id="nameInput" placeholder="Enter your name">
         <label for="nameInput">Name Here</label>
       </div>
@@ -52,43 +51,33 @@
     </div>
   </div>
 
+  <script>
+    // ✅ Auto-redirect if user already entered name before
+    const savedName = localStorage.getItem('userName');
+    if (savedName) {
+      // 👇 Replace 'your-repo-name' if needed
+      window.location.href = 'https://nuthna.github.io/budget_buddy/tracker_dup4.html';
+    }
+
+    // ✅ Save name and redirect
+    document.addEventListener('DOMContentLoaded', () => {
+      const loginBtn = document.getElementById('login-button');
+      loginBtn.addEventListener('click', () => {
+        const name = document.getElementById('nameInput').value.trim();
+        if (name) {
+          localStorage.setItem('userName', name);
+          window.location.href = 'https://nuthna.github.io/budget_buddy/tracker_dup4.html';
+        } else {
+          alert("Please enter a valid name.");
+        }
+      });
+    });
+  </script>
+
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
-
-  <!-- JavaScript Logic -->
-  <script>
-    // On page load, pre-fill input if name exists
-    window.onload = function () {
-      const savedName = localStorage.getItem('userName');
-      if (savedName) {
-        document.getElementById('nameInput').value = savedName;
-      }
-    };
-
-    // Save name when Login is clicked
-    document.getElementById('login-button').addEventListener('click', function () {
-      const name = document.getElementById('nameInput').value.trim();
-      if (name) {
-        localStorage.setItem('userName', name);
-        alert("Name saved! You can now click 'Click Here' to proceed.");
-      } else {
-        alert("Please enter a valid name.");
-      }
-    });
-
-    // Redirect to tracker page on GitHub Pages
-    document.getElementById('click-here-button').addEventListener('click', function () {
-      const savedName = localStorage.getItem('userName');
-      if (savedName) {
-        // ✅ UPDATE this line if your GitHub repo name or username is different
-        window.location.href = 'https://nuthna.github.io/budget_buddy/tracker_dup4.html';
-      } else {
-        alert("Please enter your name first and click Login.");
-      }
-    });
-  </script>
 </body>
 
 </html>
