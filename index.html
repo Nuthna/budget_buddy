@@ -30,19 +30,38 @@
                 <span id="Name">Name</span>
             </h2>
             <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
-                <label for="floatingInput">Name Here</label>
+                <input type="text" class="form-control" id="nameInput" placeholder="Enter your name">
+                <label for="nameInput">Name Here</label>
             </div>
 
-            <a href="./tracker_dup4.html">
-                <button class="btn btn-sm" id="login-button">
-                    Login
-                </button>
-            </a>
+            <button class="btn btn-sm" id="login-button">
+                Login
+            </button>
         </div>
     </div>
 
+    <!-- Scripts -->
+    <script>
+        // Redirect if name already stored
+        window.onload = function () {
+            const storedName = localStorage.getItem('userName');
+            if (storedName) {
+                window.location.href = './tracker_dup4.html';
+            }
+        };
 
+        // Save name on login click
+        document.getElementById('login-button').addEventListener('click', function (e) {
+            const name = document.getElementById('nameInput').value.trim();
+            if (name) {
+                localStorage.setItem('userName', name);
+                window.location.href = './tracker_dup4.html'; // Redirect manually on valid input
+            } else {
+                e.preventDefault();
+                alert("Please enter your name.");
+            }
+        });
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
@@ -52,7 +71,7 @@
         crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
         integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
-        crossorigin="anonymous"></script> 
+        crossorigin="anonymous"></script>
 </body>
 
 </html>
