@@ -78,13 +78,12 @@
       }
     });
 
-    // Navigate to tracker page if name exists
+    // Redirect to tracker page on GitHub Pages
     document.getElementById('click-here-button').addEventListener('click', function () {
       const savedName = localStorage.getItem('userName');
       if (savedName) {
-        // This works even on GitHub Pages regardless of subfolder path
-        const path = window.location.pathname.replace(/\/[^\/]*$/, '/');
-        window.location.href = window.location.origin + path + 'tracker_dup4.html';
+        // ✅ UPDATE this line if your GitHub repo name or username is different
+        window.location.href = 'https://nuthnasree.github.io/expense-tracker/tracker_dup4.html';
       } else {
         alert("Please enter your name first and click Login.");
       }
