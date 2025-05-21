@@ -2,76 +2,81 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./Home.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Expense Tracker</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+  <!-- Google Fonts: Comfortaa -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="./Home.css">
+
+  <style>
+    /* Apply Comfortaa globally */
+    body, input, button, label, h1, h2, h3, h4, h5, span, div {
+      font-family: 'Comfortaa', cursive !important;
+    }
+  </style>
 </head>
 
 <body>
-    <div class="parent">
-        <div class="solid-circle"></div>
-        <div class="header-home">
-            <h5 class="m-0">Expense Tracker
-                <img src="./spending.png" alt="" width="35px" height="35px">
-            </h5>
-            <button class="btn btn-md" id="click-here-button">Click Here</button>
-        </div>
-        <div class="main-content">
-            <h2 class="main-content-text">Hello
-                <img src="./wave.png" alt="" width="35px">
-                , please enter your
-                <br>
-                <span id="Name">Name</span>
-            </h2>
-            <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="nameInput" placeholder="Enter your name">
-                <label for="nameInput">Name Here</label>
-            </div>
+  <div class="parent">
+    <div class="solid-circle"></div>
 
-            <button class="btn btn-sm" id="login-button">
-                Login
-            </button>
-        </div>
+    <div class="header-home">
+      <h5 class="m-0">
+        Expense Tracker
+        <img src="./spending.png" alt="" width="35px" height="35px">
+      </h5>
     </div>
 
-    <!-- Scripts -->
-    <script>
-        // Redirect if name already stored
-        window.onload = function () {
-            const storedName = localStorage.getItem('userName');
-            if (storedName) {
-                window.location.href = './tracker_dup4.html';
-            }
-        };
+    <div class="main-content">
+      <h2 class="main-content-text">Hello
+        <img src="./wave.png" alt="" width="35px">,
+        please enter your<br>
+        <span id="Name">Name</span>
+      </h2>
 
-        // Save name on login click
-        document.getElementById('login-button').addEventListener('click', function (e) {
-            const name = document.getElementById('nameInput').value.trim();
-            if (name) {
-                localStorage.setItem('userName', name);
-                window.location.href = './tracker_dup4.html'; // Redirect manually on valid input
-            } else {
-                e.preventDefault();
-                alert("Please enter your name.");
-            }
-        });
-    </script>
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="nameInput" placeholder="Enter your name">
+        <label for="nameInput">Name Here</label>
+      </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
-        crossorigin="anonymous"></script>
+      <button class="btn btn-sm" id="login-button">Login</button>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    // Redirect to tracker_dup4.html if name already exists
+    const savedName = localStorage.getItem('userName');
+    if (savedName) {
+      window.location.href = './tracker_dup4.html';
+    }
+
+    // Save name and redirect on button click
+    document.getElementById('login-button').addEventListener('click', () => {
+      const name = document.getElementById('nameInput').value.trim();
+      if (name) {
+        localStorage.setItem('userName', name);
+        window.location.href = './tracker_dup4.html';
+      } else {
+        alert("Please enter a valid name.");
+      }
+    });
+  </script>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
 </body>
 
 </html>
