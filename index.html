@@ -10,17 +10,17 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
-  <!-- Google Fonts: Comfortaa -->
+  <!-- Google Font: Comfortaa -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
 
-  <!-- Custom CSS -->
+  <!-- Your custom CSS -->
   <link rel="stylesheet" href="./Home.css">
 
+  <!-- Font style for all elements -->
   <style>
-    /* Apply Comfortaa globally */
-    body, input, button, label, h1, h2, h3, h4, h5, span, div {
+    body, h1, h2, h3, h4, h5, span, input, label, button, div {
       font-family: 'Comfortaa', cursive !important;
     }
   </style>
@@ -35,6 +35,7 @@
         Expense Tracker
         <img src="./spending.png" alt="" width="35px" height="35px">
       </h5>
+      <button class="btn btn-md" id="click-here-button">Click Here</button>
     </div>
 
     <div class="main-content">
@@ -55,20 +56,32 @@
 
   <!-- JavaScript -->
   <script>
-    // Redirect to tracker_dup4.html if name already exists
-    const savedName = localStorage.getItem('userName');
-    if (savedName) {
-      window.location.href = './tracker_dup4.html';
-    }
+    // On page load, show stored name if available
+    window.onload = function () {
+      const savedName = localStorage.getItem('userName');
+      if (savedName) {
+        document.getElementById('nameInput').value = savedName;
+      }
+    };
 
-    // Save name and redirect on button click
-    document.getElementById('login-button').addEventListener('click', () => {
+    // Save name on Login click
+    document.getElementById('login-button').addEventListener('click', function () {
       const name = document.getElementById('nameInput').value.trim();
       if (name) {
         localStorage.setItem('userName', name);
-        window.location.href = './tracker_dup4.html';
+        alert("Name saved! You can now click 'Click Here' to proceed.");
       } else {
         alert("Please enter a valid name.");
+      }
+    });
+
+    // Navigate to tracker page if name exists
+    document.getElementById('click-here-button').addEventListener('click', function () {
+      const savedName = localStorage.getItem('userName');
+      if (savedName) {
+        window.location.href = './tracker_dup4.html';
+      } else {
+        alert("Please enter your name first and click Login.");
       }
     });
   </script>
