@@ -51,19 +51,7 @@
         </select>
 
         <div class="form-floating inputs">
-            <select class="form-select categoryInput" id="categoryInput">
-                <option selected>Select Category</option>
-                <option value="Shopping">Shopping</option>
-                <option value="Food">Food</option>
-                <option value="Market">Market(veges)</option>
-                <option value="Bills">Bills</option>
-                <option value="Home">Home</option>
-                <option value="Kids">Kids</option>
-                <option value="Transport">Transport</option>
-                <option value="ATM &Cash">ATM & Cash</option>
-                <option value="Salary">Salary</option>
-                <option value="business">Business profits</option>
-        </select>
+            <input type="text" class="form-control categoryInput" id="categoryInput" placeholder="Type category (e.g. Milk, Internet, Gas Bill)">
             <label for="categoryInput">Category</label>
         </div>
 
@@ -201,7 +189,7 @@
             let date = document.getElementsByClassName("dateInput")[0].value;
             let amount = document.getElementsByClassName("amountInput")[0].value;
             let transactionType = document.getElementsByClassName("transactionType")[0].value;
-            let category = document.getElementsByClassName("categoryInput")[0].value;
+            let category = document.getElementsByClassName("categoryInput")[0].value.trim();
 
             if (!date) {
                 alert("Please enter a date");
@@ -223,8 +211,8 @@
                 return;
             }
 
-            if (category === "Select Category") {
-                alert("Please select a category");
+            if (!category) {
+                alert("Please enter a category");
                 return;
             }
 
@@ -251,7 +239,7 @@
             document.getElementsByClassName("dateInput")[0].value = "";
             document.getElementsByClassName("amountInput")[0].value = "";
             document.getElementsByClassName("transactionType")[0].value = "Transaction Type";
-            document.getElementsByClassName("categoryInput")[0].value = "Select Category";
+            document.getElementsByClassName("categoryInput")[0].value = "";
         }
     
 // Add this function to your existing script
@@ -268,10 +256,19 @@ function pieChart() {
     const categories = {};
     expenses.forEach(expense => {
         const amount = parseFloat(expense.amount);
-        categories[expense.category] = (categories[expense.category] || 0) + amount;
+        const normalizedCategory = expense.category.trim().toLowerCase();
+        if (!categories[normalizedCategory]) {
+            categories[normalizedCategory] = { amount: 0, display: expense.category.trim() };
+        }
+        categories[normalizedCategory].amount += amount;
     });
     
-    localStorage.setItem('pieChartData', JSON.stringify(categories));
+    // Convert back to a flat object for piechart.html with display names
+    const pieChartData = {};
+    for (const key in categories) {
+        pieChartData[categories[key].display] = categories[key].amount;
+    }
+    localStorage.setItem('pieChartData', JSON.stringify(pieChartData));
     
     // Open in same window instead of new tab
     window.location.href = 'piechart.html';
