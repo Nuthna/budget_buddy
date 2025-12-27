@@ -1,3 +1,4 @@
 {
-    "livePreview.defaultPreviewPath": "/Tracker.html"
+    "livePreview.defaultPreviewPath": "/Tracker.html",
+    "liveServer.settings.port": 5501
 }

@@ -9,6 +9,21 @@
             font-family: 'Comfortaa', sans-serif;
             text-align: center;
         }
+        #filterBar {
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        #filterBar label {
+            font-weight: 600;
+        }
+        #monthSelector, #yearSelector {
+            padding: 6px 12px;
+            border-radius: 5px;
+            border: 1px solid #bbb;
+        }
         #chartContainer {
             max-width: 600px;
             margin: 0 auto;
@@ -20,6 +35,12 @@
     </style>
 </head>
 <body>
+    <div id="filterBar" style="margin-bottom: 24px; display:flex; align-items: center; justify-content: center; gap: 12px;">
+        <label for="monthSelector" style="font-weight: 600;">Month: </label>
+        <select id="monthSelector" style="padding:6px 12px;"></select>
+        <label for="yearSelector" style="font-weight: 600;">Year: </label>
+        <select id="yearSelector" style="padding:6px 12px;"></select>
+    </div>
     <div id="content">
         <h2>Expense Breakdown</h2>
         <div id="chartContainer">
@@ -31,69 +52,131 @@
     </div>
 
     <script>
-        // Check for chart data first
-        const chartData = JSON.parse(localStorage.getItem('pieChartData'));
-        
-        if (!chartData || Object.keys(chartData).length === 0) {
-            document.getElementById('content').innerHTML = `
-                <div class="error-message">
-                    <h2>No Data Available</h2>
-                    <p>No expenses found to generate pie chart.</p>
-                    <button onclick="window.close()" 
-                        style="margin-top: 20px; padding: 10px 20px; 
-                        background-color: #dc3545; color: white; 
-                        border: none; border-radius: 5px; cursor: pointer;">
-                        Close Window
-                    </button>
-                </div>
-            `;
-            throw new Error('No chart data available');
+        // Util for getting month/year from date string
+        function getMonthYear(dateStr) {
+            // Handles YYYY-MM-DD or similar
+            let d = new Date(dateStr);
+            return { month: d.getMonth(), year: d.getFullYear() };
         }
 
-        // Proceed with chart creation if data exists
-        const categories = Object.keys(chartData);
-        const amounts = Object.values(chartData);
+        // Month names
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-        const ctx = document.getElementById('myChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'pie',
-            data: {
-                labels: categories,
-                datasets: [{
-                    data: amounts,
-                    backgroundColor: [
-                        '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0',
-                        '#9966FF', '#FF9F40', '#FFCD56', '#C9CBCF',
-                        '#FF6B6B', '#45B7D1', '#96CEB4', '#FFEEAD'
-                    ],
-                    hoverOffset: 4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'right',
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.label || '';
-                                if (label) label += ': ';
-                                if (context.parsed !== null) {
-                                    label += new Intl.NumberFormat('en-IN', {
-                                        style: 'currency',
-                                        currency: 'INR'
-                                    }).format(context.parsed);
+        // Get all transactions from localStorage
+        let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+
+        // Find unique years in transaction dates
+        let years = new Set();
+        transactions.forEach(tx => {
+            if (tx.date) {
+                years.add(new Date(tx.date).getFullYear());
+            }
+        });
+        years = Array.from(years).sort((a, b) => b - a);
+        // If no records, default to this year
+        if (years.length === 0) years.push(new Date().getFullYear());
+
+        // Set up dropdowns
+        const monthSel = document.getElementById('monthSelector');
+        const yearSel = document.getElementById('yearSelector');
+        // Populate
+        monthNames.forEach((nm, idx) => {
+            let opt = document.createElement('option');
+            opt.value = idx;
+            opt.textContent = nm;
+            monthSel.appendChild(opt);
+        });
+        years.forEach(y => {
+            let opt = document.createElement('option');
+            opt.value = y; opt.textContent = y;
+            yearSel.appendChild(opt);
+        });
+        // Set default to current
+        let now = new Date();
+        monthSel.value = now.getMonth();
+        yearSel.value = now.getFullYear();
+
+        // Chart instance for re-draw
+        let chart = null;
+
+        function updateUI() {
+            const selMonth = parseInt(monthSel.value);
+            const selYear = parseInt(yearSel.value);
+            // Filter transactions for month + year
+            const filtered = transactions.filter(t => {
+                if (!t.date) return false;
+                let d = new Date(t.date);
+                return d.getMonth() === selMonth && d.getFullYear() === selYear;
+            });
+            // Group by category
+            const catData = {};
+            filtered.filter(t => t.type && t.type.toLowerCase() === 'expense').forEach(exp => {
+                const normalizedCategory = exp.category.trim().toLowerCase();
+                if (!catData[normalizedCategory]) {
+                    catData[normalizedCategory] = { amount: 0, display: exp.category.trim() };
+                }
+                catData[normalizedCategory].amount += parseFloat(exp.amount);
+            });
+            // Prepare for chart
+            const chartLabels = Object.values(catData).map(d => d.display);
+            const chartAmounts = Object.values(catData).map(d => d.amount);
+
+            // Show outcome
+            const content = document.getElementById('content');
+            if (filtered.length === 0) {
+                content.innerHTML = `<h2>Expense Breakdown</h2><div class="error-message"><h2>No transactions recorded for this month.</h2></div>`;
+                return;
+            }
+            // Render chart container again
+            content.innerHTML = `
+                <h2>Expense Breakdown</h2>
+                <div id="chartContainer"><canvas id="myChart"></canvas></div>
+                <button onclick="window.close(); window.location.href='tracker_dup4.html'" style="margin-top: 20px; padding: 10px 20px; background-color: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer;">Close Window</button>
+            `;
+            // Draw chart
+            const ctx = document.getElementById('myChart').getContext('2d');
+            if (chart) chart.destroy();
+            chart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: chartLabels,
+                    datasets: [{
+                        data: chartAmounts,
+                        backgroundColor: [
+                            '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0',
+                            '#9966FF', '#FF9F40', '#FFCD56', '#C9CBCF',
+                            '#FF6B6B', '#45B7D1', '#96CEB4', '#FFEEAD'
+                        ],
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) label += ': ';
+                                    if (context.parsed !== null) {
+                                        label += new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(context.parsed);
+                                    }
+                                    return label;
                                 }
-                                return label;
                             }
                         }
                     }
                 }
-            }
-        });
+            });
+        }
+
+        // Listen for changes
+        monthSel.addEventListener('change', updateUI);
+        yearSel.addEventListener('change', updateUI);
+        // Initial render
+        updateUI();
     </script>
 </body>
 </html>
